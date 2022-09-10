@@ -43,6 +43,7 @@ const App = () => {
       leftGeometry.scale(-1, 1, 1)
       const leftMaterial = new MeshBasicMaterial({ map: texture })
       const leftMesh = new Mesh(leftGeometry, leftMaterial)
+      leftMesh.rotation.y = Math.PI
       scene.add(leftMesh)
 
       renderer.current = new WebGLRenderer({ canvas })
