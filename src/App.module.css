@@ -2,12 +2,19 @@
   display: grid;
   position: fixed;
   inset: 0;
-  grid-template-rows: auto 1fr;
+  align-content: start;
   row-gap: 8px;
   margin: 8px;
+  overflow: auto;
 }
 
 .video {
   border-radius: var(--mui-shape-borderRadius);
   max-width: 100%;
+}
+
+.canvas {
+  border-radius: var(--mui-shape-borderRadius);
+  max-width: calc(50vw - 16px);
+  max-height: calc((100vw - 16px) * 9 / 16);
 }
