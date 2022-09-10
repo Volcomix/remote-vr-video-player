@@ -1,0 +1,40 @@
+.root {
+  display: grid;
+  grid-template: 'message' 1fr / 1fr;
+  place-items: center;
+  transition: border-color 150ms ease-in-out;
+  border: 2px dashed var(--mui-palette-divider);
+  border-radius: var(--mui-shape-borderRadius);
+  background-color: rgb(var(--mui-palette-text-primaryChannel) / 3%);
+  cursor: pointer;
+  padding: 16px;
+  min-height: 96px;
+  color: var(--mui-palette-text-secondary);
+}
+
+.message {
+  grid-area: message;
+  transition: opacity 100ms ease-in-out 50ms;
+}
+
+.dragMessage {
+  opacity: 1;
+}
+
+.dropMessage {
+  opacity: 0;
+}
+
+.dragActive {
+  &.root {
+    border-color: var(--mui-palette-primary-main);
+  }
+
+  & .dragMessage {
+    opacity: 0;
+  }
+
+  & .dropMessage {
+    opacity: 1;
+  }
+}
