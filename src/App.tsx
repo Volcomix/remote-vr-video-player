@@ -35,23 +35,14 @@ const App = () => {
       }
 
       const scene = new Scene()
-      const camera = new PerspectiveCamera(70, width / height, 1, 2000)
+      const camera = new PerspectiveCamera(65, width / height, 1, 2000)
 
       const texture = new VideoTexture(video)
 
       const leftGeometry = new SphereGeometry(500, 64, 32)
       leftGeometry.scale(-1, 1, 1)
-
-      const leftUvs = leftGeometry.attributes.uv.array
-
-      for (let i = 0; i < leftUvs.length; i += 2) {
-        ;(leftUvs[i] as any) *= 0.5 // FIXME
-      }
-
       const leftMaterial = new MeshBasicMaterial({ map: texture })
-
       const leftMesh = new Mesh(leftGeometry, leftMaterial)
-      leftMesh.rotation.y = -Math.PI / 2
       scene.add(leftMesh)
 
       renderer.current = new WebGLRenderer({ canvas })

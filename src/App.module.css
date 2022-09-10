@@ -15,6 +15,6 @@
 
 .canvas {
   border-radius: var(--mui-shape-borderRadius);
-  max-width: calc(50vw - 16px);
+  max-width: calc(100vw - 16px);
   max-height: calc((100vw - 16px) * 9 / 16);
 }
