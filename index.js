@@ -1,4 +1,8 @@
+import { spawn } from 'child_process'
+
 import { build } from 'esbuild'
+
+const serve = () => spawn('node', ['./out/server.js'], { stdio: 'inherit' })
 
 await build({
   entryPoints: ['src/server.ts'],
@@ -10,19 +14,12 @@ await build({
         return
       } else {
         console.log('watch build succeeded')
-        await fastify.close()
-
-        // FIXME Reload after first request
-        /** @type {import('./src/server')} */
-        const { serve } = await import(`./out/server.js?ts=${Date.now()}`)
-        fastify = await serve()
+        server.kill()
+        server = serve()
       }
     },
   },
 })
 
 console.log('watching...')
-
-/** @type {import('./src/server')} */
-const { serve } = await import(`./out/server.js?ts=${Date.now()}`)
-let fastify = await serve()
+let server = serve()
