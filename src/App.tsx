@@ -4,61 +4,26 @@ import {
   StyledEngineProvider,
 } from '@mui/material/styles'
 import { useCallback, useRef, useState } from 'react'
-import {
-  Mesh,
-  MeshBasicMaterial,
-  PerspectiveCamera,
-  Scene,
-  SphereGeometry,
-  VideoTexture,
-  WebGLRenderer,
-} from 'three'
+import { WebGLRenderer } from 'three'
 
 import VideoDropzone from 'features/VideoDropzone'
+import * as animation from 'services/animation'
 
 import styles from './App.module.css'
-
-const width = 1920
-const height = 1080
 
 const App = () => {
   const [videoUrl, setVideoUrl] = useState<string>()
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null)
-  const renderer = useRef<WebGLRenderer | null>(null)
+  const rendererRef = useRef<WebGLRenderer | null>(null)
 
-  const init = useCallback(
+  const updateVideo = useCallback(
     (video: HTMLVideoElement | null) => {
       if (!video || !canvas) {
-        renderer.current?.setAnimationLoop(null)
-        renderer.current = null
+        animation.stop(rendererRef.current)
+        rendererRef.current = null
         return
       }
-
-      const scene = new Scene()
-      const camera = new PerspectiveCamera(67.5, width / height, 1, 2000)
-
-      const texture = new VideoTexture(video)
-
-      const leftGeometry = new SphereGeometry(500, 32, 32, undefined, Math.PI)
-      leftGeometry.scale(-1, 1, 1)
-
-      const leftUvs = leftGeometry.attributes.uv
-      for (let i = 0; i < leftUvs.count; i++) {
-        leftUvs.setX(i, leftUvs.getX(i) * 0.5)
-      }
-
-      const leftMaterial = new MeshBasicMaterial({ map: texture })
-
-      const leftMesh = new Mesh(leftGeometry, leftMaterial)
-      leftMesh.rotation.y = Math.PI
-      scene.add(leftMesh)
-
-      renderer.current = new WebGLRenderer({ canvas })
-      renderer.current.setSize(width, height)
-
-      renderer.current.setAnimationLoop(() => {
-        renderer.current?.render(scene, camera)
-      })
+      rendererRef.current = animation.start(video, canvas)
     },
     [canvas]
   )
@@ -76,7 +41,7 @@ const App = () => {
               <>
                 <video
                   className={styles.video}
-                  ref={init}
+                  ref={updateVideo}
                   src={videoUrl}
                   controls
                 />
