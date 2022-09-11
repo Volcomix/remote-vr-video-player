@@ -35,7 +35,7 @@ const App = () => {
       }
 
       const scene = new Scene()
-      const camera = new PerspectiveCamera(65, width / height, 1, 2000)
+      const camera = new PerspectiveCamera(67.5, width / height, 1, 2000)
 
       const texture = new VideoTexture(video)
 
