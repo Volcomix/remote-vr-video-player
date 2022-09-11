@@ -2,6 +2,9 @@ import { GLSL3, ShaderMaterialParameters } from 'three'
 
 import { width } from './constants'
 
+const diameter = width / 2
+const radius = diameter / 2
+
 export const DistortionShader: ShaderMaterialParameters = {
   glslVersion: GLSL3,
 
@@ -12,11 +15,16 @@ export const DistortionShader: ShaderMaterialParameters = {
   vertexShader: /* glsl */ `
     out vec2 vUv;
 
+    const float k1 = 0.1;
+    const float k2 = 0.03;
+
     void main() {
       vUv = uv;
-      vec2 p = position.xy / ${width}.0;
-      float d = 1.0 - dot(p, p) * 1.7;
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(position * d, 1.0);
+      vec2 p = position.xy;
+      float r2 = dot(p, p) / ${radius * radius}.0;
+      float r4 = r2 * r2;
+      vec2 d = p / (1.0 + k1 * r2 + k2 * r4);
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(d, position.z, 1.0);
     }
   `,
 
