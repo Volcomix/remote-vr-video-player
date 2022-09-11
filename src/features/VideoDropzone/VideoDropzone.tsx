@@ -21,7 +21,7 @@ const VideoDropzone = ({ onDrop }: VideoDropzoneProps) => {
     >
       <input {...getInputProps()} />
       <Typography className={cx(styles.message, styles.dragMessage)}>
-        {`Drag 'n' drop a video file here, or click to select file`}
+        {`Drag 'n' drop a video file here, or click to select a file`}
       </Typography>
       <Typography className={cx(styles.message, styles.dropMessage)}>
         {`Drop the file here...`}
