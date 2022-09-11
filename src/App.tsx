@@ -39,9 +39,16 @@ const App = () => {
 
       const texture = new VideoTexture(video)
 
-      const leftGeometry = new SphereGeometry(500, 64, 32)
+      const leftGeometry = new SphereGeometry(500, 32, 32, undefined, Math.PI)
       leftGeometry.scale(-1, 1, 1)
+
+      const leftUvs = leftGeometry.attributes.uv
+      for (let i = 0; i < leftUvs.count; i++) {
+        leftUvs.setX(i, leftUvs.getX(i) * 0.5)
+      }
+
       const leftMaterial = new MeshBasicMaterial({ map: texture })
+
       const leftMesh = new Mesh(leftGeometry, leftMaterial)
       leftMesh.rotation.y = Math.PI
       scene.add(leftMesh)
