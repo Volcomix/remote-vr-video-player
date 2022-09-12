@@ -1,11 +1,14 @@
+import websocketPlugin from '@fastify/websocket'
 import Fastify from 'fastify'
 
 const fastify = Fastify({
   logger: true,
 })
 
-fastify.get('/', async () => {
-  return { hello: 'world' }
+await fastify.register(websocketPlugin)
+
+fastify.get('/', { websocket: true }, async (connection) => {
+  connection.socket.send(JSON.stringify({ hello: 'world' }))
 })
 
 try {

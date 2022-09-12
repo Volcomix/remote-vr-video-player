@@ -11,6 +11,9 @@ import * as animation from 'services/animation'
 
 import styles from './App.module.css'
 
+// TODO Use it and extract URL
+const webSocket = new WebSocket('ws://localhost:3000')
+
 const App = () => {
   const [videoUrl, setVideoUrl] = useState<string>()
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null)
