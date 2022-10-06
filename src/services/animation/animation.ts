@@ -13,6 +13,7 @@ import {
   WebGLRenderTarget,
 } from 'three'
 
+import { AnaglyphShader } from './anaglyphShader'
 import { height, width } from './constants'
 import { DistortionShader } from './distortionShader'
 
@@ -41,10 +42,10 @@ const initVideoSphere = (
   mesh.layers.set(layer)
   scene.add(mesh)
 
-  const camera = new PerspectiveCamera(67.5, width / 2 / height, 1, 2000)
+  const camera = new PerspectiveCamera(67.5, width / height, 1, 2000)
   camera.layers.enable(layer)
 
-  const renderTarget = new WebGLRenderTarget(width / 2, height)
+  const renderTarget = new WebGLRenderTarget(width, height)
 
   return { camera, renderTarget }
 }
@@ -89,6 +90,33 @@ const initDistortion = (scene: Scene, left: Eye, right: Eye) => {
   return { camera }
 }
 
+const initAnaglyph = (scene: Scene, left: Eye, right: Eye) => {
+  const plane = new PlaneGeometry(width, height, 16, 16)
+  const material = new ShaderMaterial(AnaglyphShader)
+
+  const mesh = new Mesh(plane, material)
+  mesh.layers.set(3)
+
+  mesh.onBeforeRender = () => {
+    material.uniforms.tLeft.value = left.renderTarget.texture
+    material.uniforms.tRight.value = right.renderTarget.texture
+  }
+
+  scene.add(mesh)
+
+  const camera = new OrthographicCamera(
+    -width / 2,
+    width / 2,
+    height / 2,
+    -height / 2,
+    0,
+    1
+  )
+  camera.layers.enable(3)
+
+  return { camera }
+}
+
 const render = (
   renderer: WebGLRenderer,
   scene: Scene,
@@ -103,7 +131,8 @@ export const start = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
   const scene = new Scene()
 
   const { left, right } = initStereo(scene, video)
-  const distortion = initDistortion(scene, left, right)
+  // const distortion = initDistortion(scene, left, right)
+  const anaglyph = initAnaglyph(scene, left, right)
 
   const renderer = new WebGLRenderer({ canvas })
   renderer.setSize(width, height)
@@ -111,7 +140,8 @@ export const start = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
   renderer.setAnimationLoop(() => {
     render(renderer, scene, left.camera, left.renderTarget)
     render(renderer, scene, right.camera, right.renderTarget)
-    render(renderer, scene, distortion.camera)
+    // render(renderer, scene, distortion.camera)
+    render(renderer, scene, anaglyph.camera)
   })
 
   return renderer
