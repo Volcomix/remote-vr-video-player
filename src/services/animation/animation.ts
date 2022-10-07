@@ -12,6 +12,7 @@ import {
   WebGLRenderer,
   WebGLRenderTarget,
 } from 'three'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
 import { AnaglyphShader } from './anaglyphShader'
 import { height, width } from './constants'
@@ -131,6 +132,34 @@ export const start = (video: HTMLVideoElement, canvas: HTMLCanvasElement) => {
   const scene = new Scene()
 
   const { left, right } = initStereo(scene, video)
+
+  // TODO Refactor controls
+  const controls = {
+    left: new OrbitControls(left.camera, canvas),
+    right: new OrbitControls(right.camera, canvas),
+  }
+  controls.left.enablePan = false
+  controls.left.enableZoom = false
+  controls.left.minDistance = 0.0000001
+  controls.left.maxDistance = 0.0000001
+  controls.left.minPolarAngle = Math.PI / 8
+  controls.left.maxPolarAngle = (7 * Math.PI) / 8
+  controls.left.minAzimuthAngle = -Math.PI / 4
+  controls.left.maxAzimuthAngle = Math.PI / 4
+  left.camera.position.z = 0.0000001
+  controls.left.update()
+
+  controls.right.enablePan = false
+  controls.right.enableZoom = false
+  controls.right.minDistance = 0.0000001
+  controls.right.maxDistance = 0.0000001
+  controls.right.minPolarAngle = Math.PI / 8
+  controls.right.maxPolarAngle = (7 * Math.PI) / 8
+  controls.right.minAzimuthAngle = -Math.PI / 4
+  controls.right.maxAzimuthAngle = Math.PI / 4
+  right.camera.position.z = 0.0000001
+  controls.right.update()
+
   // const distortion = initDistortion(scene, left, right)
   const anaglyph = initAnaglyph(scene, left, right)
 
