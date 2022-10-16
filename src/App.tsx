@@ -1,3 +1,4 @@
+import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import CssBaseline from '@mui/material/CssBaseline'
 import {
   Experimental_CssVarsProvider as CssVarsProvider,
@@ -48,7 +49,14 @@ const App = () => {
                   src={videoUrl}
                   controls
                 />
-                <canvas className={styles.canvas} ref={setCanvas} />
+                <div className={styles.player}>
+                  <canvas className={styles.canvas} ref={setCanvas} />
+                  <div className={styles.controls}>
+                    <button className={styles.control}>
+                      <PlayArrowIcon />
+                    </button>
+                  </div>
+                </div>
               </>
             )}
           </div>

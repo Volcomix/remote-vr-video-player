@@ -16,11 +16,43 @@
   min-height: 0;
 }
 
+.player {
+  position: relative;
+  min-height: 0;
+}
+
 .canvas {
   border-radius: var(--mui-shape-borderRadius);
   background-color: var(--mui-palette-common-black);
   width: 100% !important;
   height: 100% !important;
-  min-height: 0;
   object-fit: contain;
+}
+
+.controls {
+  display: grid;
+  position: absolute;
+  inset: 0;
+  align-content: end;
+  justify-content: start;
+}
+
+.control {
+  outline: none;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  padding: 0;
+  width: 36px;
+  height: 36px;
+  color: white; /* TODO Use mui palette */
+
+  &:hover {
+    border-radius: 50%;
+    background-color: rgb(32 33 36 / 71%);
+  }
+
+  & svg {
+    font-size: 20px;
+  }
 }
