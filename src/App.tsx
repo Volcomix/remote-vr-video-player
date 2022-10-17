@@ -1,3 +1,4 @@
+import FullscreenIcon from '@mui/icons-material/Fullscreen'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import CssBaseline from '@mui/material/CssBaseline'
 import {
@@ -54,6 +55,10 @@ const App = () => {
                   <div className={styles.controls}>
                     <button className={styles.control}>
                       <PlayArrowIcon />
+                    </button>
+                    <div></div>
+                    <button className={styles.control}>
+                      <FullscreenIcon />
                     </button>
                   </div>
                 </div>
