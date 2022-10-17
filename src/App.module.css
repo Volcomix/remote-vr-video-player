@@ -37,6 +37,7 @@
   grid-auto-flow: column;
   align-content: end;
   justify-content: start;
+  background-image: linear-gradient(transparent 65%, black);
   padding: 0 6px;
   pointer-events: none;
 }
