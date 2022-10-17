@@ -1,4 +1,5 @@
 import FullscreenIcon from '@mui/icons-material/Fullscreen'
+import FullscreenExitIcon from '@mui/icons-material/FullscreenExit'
 import PauseIcon from '@mui/icons-material/Pause'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -18,11 +19,13 @@ import styles from './App.module.css'
 const webSocket = new WebSocket('ws://localhost:3000')
 
 const App = () => {
+  const player = useRef<HTMLDivElement>(null)
   const video = useRef<HTMLVideoElement | null>(null)
   const [videoUrl, setVideoUrl] = useState<string>()
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null)
   const renderer = useRef<WebGLRenderer | null>(null)
   const [playing, setPlaying] = useState(false)
+  const [fullscreen, setFullscreen] = useState(false)
 
   const updateVideo = useCallback(
     (element: HTMLVideoElement | null) => {
@@ -54,7 +57,7 @@ const App = () => {
                   src={videoUrl}
                   controls
                 />
-                <div className={styles.player}>
+                <div className={styles.player} ref={player}>
                   <canvas className={styles.canvas} ref={setCanvas} />
                   <div className={styles.controls}>
                     {playing ? (
@@ -62,6 +65,7 @@ const App = () => {
                         className={styles.control}
                         onClick={() => {
                           video.current?.pause()
+                          // FIXME Set states from events instead
                           setPlaying(false)
                         }}
                       >
@@ -72,6 +76,7 @@ const App = () => {
                         className={styles.control}
                         onClick={() => {
                           video.current?.play()
+                          // FIXME Set states from events instead
                           setPlaying(true)
                         }}
                       >
@@ -79,9 +84,29 @@ const App = () => {
                       </button>
                     )}
                     <div></div>
-                    <button className={styles.control}>
-                      <FullscreenIcon />
-                    </button>
+                    {fullscreen ? (
+                      <button
+                        className={styles.control}
+                        onClick={() => {
+                          document.exitFullscreen()
+                          // FIXME Set states from events instead
+                          setFullscreen(false)
+                        }}
+                      >
+                        <FullscreenExitIcon />
+                      </button>
+                    ) : (
+                      <button
+                        className={styles.control}
+                        onClick={() => {
+                          player.current?.requestFullscreen()
+                          // FIXME Set states from events instead
+                          setFullscreen(true)
+                        }}
+                      >
+                        <FullscreenIcon />
+                      </button>
+                    )}
                   </div>
                 </div>
               </>
