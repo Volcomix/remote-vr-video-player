@@ -1,4 +1,5 @@
 import FullscreenIcon from '@mui/icons-material/Fullscreen'
+import PauseIcon from '@mui/icons-material/Pause'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import CssBaseline from '@mui/material/CssBaseline'
 import {
@@ -17,18 +18,21 @@ import styles from './App.module.css'
 const webSocket = new WebSocket('ws://localhost:3000')
 
 const App = () => {
+  const video = useRef<HTMLVideoElement | null>(null)
   const [videoUrl, setVideoUrl] = useState<string>()
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null)
-  const rendererRef = useRef<WebGLRenderer | null>(null)
+  const renderer = useRef<WebGLRenderer | null>(null)
+  const [playing, setPlaying] = useState(false)
 
   const updateVideo = useCallback(
-    (video: HTMLVideoElement | null) => {
-      if (!video || !canvas) {
-        animation.stop(rendererRef.current)
-        rendererRef.current = null
+    (element: HTMLVideoElement | null) => {
+      video.current = element
+      if (!element || !canvas) {
+        animation.stop(renderer.current)
+        renderer.current = null
         return
       }
-      rendererRef.current = animation.start(video, canvas)
+      renderer.current = animation.start(element, canvas)
     },
     [canvas]
   )
@@ -53,9 +57,27 @@ const App = () => {
                 <div className={styles.player}>
                   <canvas className={styles.canvas} ref={setCanvas} />
                   <div className={styles.controls}>
-                    <button className={styles.control}>
-                      <PlayArrowIcon />
-                    </button>
+                    {playing ? (
+                      <button
+                        className={styles.control}
+                        onClick={() => {
+                          video.current?.pause()
+                          setPlaying(false)
+                        }}
+                      >
+                        <PauseIcon />
+                      </button>
+                    ) : (
+                      <button
+                        className={styles.control}
+                        onClick={() => {
+                          video.current?.play()
+                          setPlaying(true)
+                        }}
+                      >
+                        <PlayArrowIcon />
+                      </button>
+                    )}
                     <div></div>
                     <button className={styles.control}>
                       <FullscreenIcon />
