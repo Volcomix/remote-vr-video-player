@@ -56,6 +56,8 @@ const App = () => {
                   ref={updateVideo}
                   src={videoUrl}
                   controls
+                  onPlay={() => setPlaying(true)}
+                  onPause={() => setPlaying(false)}
                 />
                 <div className={styles.player} ref={player}>
                   <canvas className={styles.canvas} ref={setCanvas} />
@@ -63,22 +65,14 @@ const App = () => {
                     {playing ? (
                       <button
                         className={styles.control}
-                        onClick={() => {
-                          video.current?.pause()
-                          // FIXME Set states from events instead
-                          setPlaying(false)
-                        }}
+                        onClick={() => video.current?.pause()}
                       >
                         <PauseIcon />
                       </button>
                     ) : (
                       <button
                         className={styles.control}
-                        onClick={() => {
-                          video.current?.play()
-                          // FIXME Set states from events instead
-                          setPlaying(true)
-                        }}
+                        onClick={() => video.current?.play()}
                       >
                         <PlayArrowIcon />
                       </button>
