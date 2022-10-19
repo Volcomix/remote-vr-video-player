@@ -7,7 +7,7 @@ import {
   Experimental_CssVarsProvider as CssVarsProvider,
   StyledEngineProvider,
 } from '@mui/material/styles'
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { WebGLRenderer } from 'three'
 
 import VideoDropzone from 'features/VideoDropzone'
@@ -19,11 +19,12 @@ import styles from './App.module.css'
 const webSocket = new WebSocket('ws://localhost:3000')
 
 const App = () => {
-  const player = useRef<HTMLDivElement>(null)
   const video = useRef<HTMLVideoElement | null>(null)
+  const player = useRef<HTMLDivElement>(null)
+  const renderer = useRef<WebGLRenderer | null>(null)
+
   const [videoUrl, setVideoUrl] = useState<string>()
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null)
-  const renderer = useRef<WebGLRenderer | null>(null)
   const [playing, setPlaying] = useState(false)
   const [fullscreen, setFullscreen] = useState(false)
 
@@ -39,6 +40,16 @@ const App = () => {
     },
     [canvas]
   )
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setFullscreen(!!document.fullscreenElement)
+    }
+    document.addEventListener('fullscreenchange', handleFullscreenChange)
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange)
+    }
+  }, [])
 
   return (
     <>
@@ -81,22 +92,14 @@ const App = () => {
                     {fullscreen ? (
                       <button
                         className={styles.control}
-                        onClick={() => {
-                          document.exitFullscreen()
-                          // FIXME Set states from events instead
-                          setFullscreen(false)
-                        }}
+                        onClick={() => document.exitFullscreen()}
                       >
                         <FullscreenExitIcon />
                       </button>
                     ) : (
                       <button
                         className={styles.control}
-                        onClick={() => {
-                          player.current?.requestFullscreen()
-                          // FIXME Set states from events instead
-                          setFullscreen(true)
-                        }}
+                        onClick={() => player.current?.requestFullscreen()}
                       >
                         <FullscreenIcon />
                       </button>
